@@ -29,6 +29,7 @@ controller = (params, scope, ngTableParams, $filter, timeout)->
           title: e.get('title')
           rating: e.get('rating')
           ratings: [e.get('rating')]
+          uid: e.get('uid')
           userDevices: [e.get('userDeviceId')]
       else
         o = results[key]
@@ -38,7 +39,7 @@ controller = (params, scope, ngTableParams, $filter, timeout)->
         o.rating = parseFloat o.rating.toFixed(1)
 
     data = _.values results
-    data = _.sortBy data, 'rating'
+    data = _.sortBy(data, 'rating').reverse()
     data = _.filter data, (e)->
       fromRank <= e.rating <= toRank
 

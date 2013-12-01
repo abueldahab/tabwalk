@@ -39,6 +39,7 @@
             title: e.get('title'),
             rating: e.get('rating'),
             ratings: [e.get('rating')],
+            uid: e.get('uid'),
             userDevices: [e.get('userDeviceId')]
           };
         } else {
@@ -54,7 +55,7 @@
         }
       });
       data = _.values(results);
-      data = _.sortBy(data, 'rating');
+      data = _.sortBy(data, 'rating').reverse();
       data = _.filter(data, function(e) {
         var _ref;
         return (fromRank <= (_ref = e.rating) && _ref <= toRank);
