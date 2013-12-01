@@ -11,7 +11,8 @@ config = ($routeProvider, $compileProvider) ->
   ).otherwise redirectTo: "/"
 
 
-angular.module("tapwalkdevApp", ['ngRoute']).config config
+app = angular.module("tapwalkdevApp", ['ngRoute'])
+app.config config
 
 rootController = (root, location)->
 
