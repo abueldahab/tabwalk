@@ -3,7 +3,7 @@
 onError = (error)->
   console.log error
 
-controller = (params, scope, ngTableParams, $filter)->
+controller = (params, scope, ngTableParams, $filter, timeout)->
 
 
   venueUid = parseInt params.venue, 10
@@ -91,6 +91,13 @@ controller = (params, scope, ngTableParams, $filter)->
   load()
   initTable()
 
+  reloader = (->
+    timeout reloader, refreshSeconds
+    console.log 'reloadin...'
+    load()
+  )()
+
 
 angular.module("tapwalkdevApp")
-  .controller "MainCtrl", ['$routeParams', '$scope', 'ngTableParams', '$filter', controller]
+  .controller "MainCtrl",
+  ['$routeParams', '$scope', 'ngTableParams', '$filter', '$timeout', controller]

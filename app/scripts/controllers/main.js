@@ -8,8 +8,8 @@
     return console.log(error);
   };
 
-  controller = function(params, scope, ngTableParams, $filter) {
-    var alter, fromRank, getData, initTable, load, onSuccess, query, refreshSeconds, toRank, userRating, venueUid, x;
+  controller = function(params, scope, ngTableParams, $filter, timeout) {
+    var alter, fromRank, getData, initTable, load, onSuccess, query, refreshSeconds, reloader, toRank, userRating, venueUid, x;
     venueUid = parseInt(params.venue, 10);
     fromRank = parseFloat(params.from);
     toRank = parseFloat(params.to);
@@ -110,10 +110,14 @@
       });
     };
     load();
-    return initTable();
+    initTable();
+    return reloader = (function() {
+      timeout(reloader, refreshSeconds);
+      return load();
+    })();
   };
 
-  angular.module("tapwalkdevApp").controller("MainCtrl", ['$routeParams', '$scope', 'ngTableParams', '$filter', controller]);
+  angular.module("tapwalkdevApp").controller("MainCtrl", ['$routeParams', '$scope', 'ngTableParams', '$filter', '$timeout', controller]);
 
 }).call(this);
 
