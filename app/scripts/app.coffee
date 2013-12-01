@@ -4,7 +4,7 @@ config = ($routeProvider, $compileProvider) ->
   Parse.initialize "xAONBeHiD8bBeKSdpRExCDCEbQWY8gENyPO0hP5q",
                    "pwxKwWdssyPJf2bA7WvIFJ6mvQeGFCgtqGTbns0m"
 
-  $routeProvider.when "/:venue/:from/:to/:refresh",
+  $routeProvider.when "/venue/:venue/from/:from/to/:to/refresh/:refresh",
     templateUrl: "views/main.html"
     controller: "MainCtrl"
 
