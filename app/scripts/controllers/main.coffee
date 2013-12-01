@@ -9,7 +9,7 @@ controller = (params, scope, ngTableParams, $filter, timeout)->
   venueUid = parseInt params.venue, 10
   fromRank = parseFloat params.from
   toRank = parseFloat params.to
-  refreshSeconds = parseInt params.refresh, 10
+  refreshSeconds = 1000 * parseInt(params.refresh, 10)
 
   userRating = Parse.Object.extend "UserRating"
   query = new Parse.Query userRating
@@ -77,7 +77,7 @@ controller = (params, scope, ngTableParams, $filter, timeout)->
         setTimeout ->
           scope.$apply ->
             $('.star').rating()
-        , 100
+        , 10
 
       scope: {$data: {}}
     )
@@ -91,11 +91,12 @@ controller = (params, scope, ngTableParams, $filter, timeout)->
   load()
   initTable()
 
-  reloader = (->
-    timeout reloader, refreshSeconds
-    console.log 'reloadin...'
+  reloader = ->
+    timeout(reloader, refreshSeconds)
+    console.log 'reloading...'
     load()
-  )()
+
+  reloader()
 
 
 angular.module("tapwalkdevApp")

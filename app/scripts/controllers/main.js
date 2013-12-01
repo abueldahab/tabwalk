@@ -13,7 +13,7 @@
     venueUid = parseInt(params.venue, 10);
     fromRank = parseFloat(params.from);
     toRank = parseFloat(params.to);
-    refreshSeconds = parseInt(params.refresh, 10);
+    refreshSeconds = 1000 * parseInt(params.refresh, 10);
     userRating = Parse.Object.extend("UserRating");
     query = new Parse.Query(userRating);
     query.equalTo('venueUid', venueUid);
@@ -96,7 +96,7 @@
             return scope.$apply(function() {
               return $('.star').rating();
             });
-          }, 100);
+          }, 10);
         },
         scope: {
           $data: {}
@@ -111,10 +111,12 @@
     };
     load();
     initTable();
-    return reloader = (function() {
+    reloader = function() {
       timeout(reloader, refreshSeconds);
+      console.log('reloading...');
       return load();
-    })();
+    };
+    return reloader();
   };
 
   angular.module("tapwalkdevApp").controller("MainCtrl", ['$routeParams', '$scope', 'ngTableParams', '$filter', '$timeout', controller]);
