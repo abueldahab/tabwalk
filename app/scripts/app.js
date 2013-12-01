@@ -5,7 +5,7 @@
 
   config = function($routeProvider, $compileProvider) {
     Parse.initialize("xAONBeHiD8bBeKSdpRExCDCEbQWY8gENyPO0hP5q", "pwxKwWdssyPJf2bA7WvIFJ6mvQeGFCgtqGTbns0m");
-    return $routeProvider.when("/venue/:venue/from/:from/to/:to/refresh/:refresh", {
+    return $routeProvider.when("/venue/:venue/from/:from/to/:to/refresh/:refresh/pagination/:pagination", {
       templateUrl: "views/main.html",
       controller: "MainCtrl"
     });

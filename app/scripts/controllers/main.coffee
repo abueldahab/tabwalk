@@ -5,11 +5,13 @@ onError = (error)->
 
 controller = (params, scope, ngTableParams, $filter, timeout)->
 
-
   venueUid = parseInt params.venue, 10
   fromRank = parseFloat params.from
   toRank = parseFloat params.to
   refreshSeconds = 1000 * parseInt(params.refresh, 10)
+  console.log params.pagination.toLowerCase()
+  pagination = params.pagination.toLowerCase() == 'yes'
+  console.log pagination
 
   userRating = Parse.Object.extend "UserRating"
   query = new Parse.Query userRating
@@ -17,7 +19,6 @@ controller = (params, scope, ngTableParams, $filter, timeout)->
   scope.entities = []
 
   scope.availableRatings = (parseFloat(x.toFixed(1)) for x in [1.0..5.0] by 0.1)
-  console.log scope.availableRatings
 
   alter = (data)->
     results = {}
@@ -52,7 +53,6 @@ controller = (params, scope, ngTableParams, $filter, timeout)->
       e
 
     data = _.filter data, (e)->
-      console.log e.rank
       fromRank <= e.rank <= toRank
 
     scope.rates = 0
@@ -72,12 +72,13 @@ controller = (params, scope, ngTableParams, $filter, timeout)->
     scope.entities or []
 
   initTable = ->
-    scope.ratingsTable = new ngTableParams(
+    params =
       page: 1 # show first page
       count: 10 # count per page
       sorting:
         datetime: 'desc'
-    ,
+
+    settings =
       total: ->
         getData().length # length of data
 
@@ -89,13 +90,12 @@ controller = (params, scope, ngTableParams, $filter, timeout)->
         params.total orderedData?.length
         $defer.resolve scope.list
 
-        setTimeout ->
-          scope.$apply ->
-            $('.star').rating()
-        , 10
-
       scope: {$data: {}}
-    )
+
+    unless pagination
+      settings.counts= ->[]
+
+    scope.ratingsTable = new ngTableParams(params, settings)
 
 
   load = ->

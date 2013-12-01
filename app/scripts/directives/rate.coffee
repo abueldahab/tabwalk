@@ -6,9 +6,7 @@ controller = (scope) ->
   scope.partial = Math.round((scope.rate - scope.complete) * 10) * 10
 
   scope.starOf = (rate)->
-    s = "http://tapwalk.com/leaderboard/star_#{rate}.png"
-    console.log s
-    s
+    "http://tapwalk.com/leaderboard/star_#{rate}.png"
 
 angular.module('tapwalkdevApp')
   .directive 'rate', ->

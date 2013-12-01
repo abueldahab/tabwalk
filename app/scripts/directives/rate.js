@@ -8,10 +8,7 @@
     scope.empty = 5 - Math.ceil(scope.rate);
     scope.partial = Math.round((scope.rate - scope.complete) * 10) * 10;
     return scope.starOf = function(rate) {
-      var s;
-      s = "http://tapwalk.com/leaderboard/star_" + rate + ".png";
-      console.log(s);
-      return s;
+      return "http://tapwalk.com/leaderboard/star_" + rate + ".png";
     };
   };
 

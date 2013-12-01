@@ -9,11 +9,14 @@
   };
 
   controller = function(params, scope, ngTableParams, $filter, timeout) {
-    var alter, fromRank, getData, initTable, load, onSuccess, query, refreshSeconds, reloader, toRank, userRating, venueUid, x;
+    var alter, fromRank, getData, initTable, load, onSuccess, pagination, query, refreshSeconds, reloader, toRank, userRating, venueUid, x;
     venueUid = parseInt(params.venue, 10);
     fromRank = parseFloat(params.from);
     toRank = parseFloat(params.to);
     refreshSeconds = 1000 * parseInt(params.refresh, 10);
+    console.log(params.pagination.toLowerCase());
+    pagination = params.pagination.toLowerCase() === 'yes';
+    console.log(pagination);
     userRating = Parse.Object.extend("UserRating");
     query = new Parse.Query(userRating);
     query.equalTo('venueUid', venueUid);
@@ -26,7 +29,6 @@
       }
       return _results;
     })();
-    console.log(scope.availableRatings);
     alter = function(data) {
       var lastRank, lastRating, results, userDevicesElements;
       results = {};
@@ -70,7 +72,6 @@
       });
       data = _.filter(data, function(e) {
         var _ref;
-        console.log(e.rank);
         return (fromRank <= (_ref = e.rank) && _ref <= toRank);
       });
       scope.rates = 0;
@@ -90,13 +91,15 @@
       return scope.entities || [];
     };
     initTable = function() {
-      return scope.ratingsTable = new ngTableParams({
+      var settings;
+      params = {
         page: 1,
         count: 10,
         sorting: {
           datetime: 'desc'
         }
-      }, {
+      };
+      settings = {
         total: function() {
           return getData().length;
         },
@@ -106,17 +109,18 @@
           orderedData = (params.filter() ? $filter("filter")(data, params.filter()) : data);
           scope.list = orderedData != null ? orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()) : void 0;
           params.total(orderedData != null ? orderedData.length : void 0);
-          $defer.resolve(scope.list);
-          return setTimeout(function() {
-            return scope.$apply(function() {
-              return $('.star').rating();
-            });
-          }, 10);
+          return $defer.resolve(scope.list);
         },
         scope: {
           $data: {}
         }
-      });
+      };
+      if (!pagination) {
+        settings.counts = function() {
+          return [];
+        };
+      }
+      return scope.ratingsTable = new ngTableParams(params, settings);
     };
     load = function() {
       return query.find({
