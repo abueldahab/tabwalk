@@ -1,7 +1,6 @@
 <div class="hero-unit">
-  <ul>
-      <li ng-repeat="thing in awesomeThings">{{thing}}</li>
+  <ul ng-if="entities && (entities.length > 0)">
+      <li ng-repeat="e in entities">{{e}}</li>
   </ul>
-  <p>installed.</p>
-  <h3>Enjoy coding! - Yeoman</h3>
+  <h2 ng-if="entities && (entities.length == 0)"> No Data Available </h2>
 </div>
