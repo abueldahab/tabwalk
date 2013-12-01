@@ -4,7 +4,7 @@
   var app, config, rootController;
 
   config = function($routeProvider, $compileProvider) {
-    Parse.initialize("WSGMmizuVjklAI6SpdIMBypeDCzKPUAo05QpWUnV", "OVNmBrjWj4ggScDNvKf159pVQM89vyNTlRIOIh4u");
+    Parse.initialize("xAONBeHiD8bBeKSdpRExCDCEbQWY8gENyPO0hP5q", "pwxKwWdssyPJf2bA7WvIFJ6mvQeGFCgtqGTbns0m");
     return $routeProvider.when("/", {
       templateUrl: "views/main.html",
       controller: "MainCtrl"

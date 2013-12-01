@@ -7,23 +7,56 @@
     return console.log(error);
   };
 
-  controller = function(scope) {
-    var onSuccess, query, userRating;
+  controller = function(scope, ngTableParams, $filter) {
+    var getData, initTable, load, onSuccess, query, userRating;
     userRating = Parse.Object.extend("UserRating");
     query = new Parse.Query(userRating);
     scope.entities = [];
     onSuccess = function(data) {
-      console.log(data);
-      scope.entities = data;
-      return console.log(scope.entities.length);
+      initTable();
+      return scope.entities = data;
     };
-    return query.find({
-      success: onSuccess,
-      error: onError
-    });
+    getData = function() {
+      return scope.entities || [];
+    };
+    initTable = function() {
+      return scope.tableParams = new ngTableParams({
+        page: 1,
+        count: 10,
+        sorting: {
+          datetime: 'desc'
+        }
+      }, {
+        total: function() {
+          return getData().length;
+        },
+        getData: function($defer, params) {
+          var data, orderedData;
+          data = getData();
+          orderedData = (params.filter() ? $filter("filter")(data, params.filter()) : data);
+          scope.list = orderedData != null ? orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()) : void 0;
+          params.total(orderedData != null ? orderedData.length : void 0);
+          return $defer.resolve(scope.list);
+        },
+        scope: {
+          $data: {}
+        }
+      });
+    };
+    load = function() {
+      Service.list(function(data) {
+        scope.data = JSON.parse(data);
+        return initTable();
+      });
+      return query.find({
+        success: onSuccess,
+        error: onError
+      });
+    };
+    return load();
   };
 
-  angular.module("tapwalkdevApp").controller("MainCtrl", ['$scope', controller]);
+  angular.module("tapwalkdevApp").controller("MainCtrl", ['$scope', 'ngTableParams', '$filter', controller]);
 
 }).call(this);
 

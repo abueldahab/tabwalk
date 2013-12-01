@@ -1,6 +1,17 @@
-<div class="hero-unit">
-  <ul ng-if="entities && (entities.length > 0)">
-      <li ng-repeat="e in entities">{{e}}</li>
+<h2 ng-if="entities && (entities.length == 0)"> No Data Available </h2>
+<div class="row" ng-if="entities && (entities.length > 0)">
+  <ul>
+    <li ng-repeat="e in entities">{{e}}</li>
   </ul>
-  <h2 ng-if="entities && (entities.length == 0)"> No Data Available </h2>
+
+  <table ng-table="installedPackagesTable" class="table table-bordered">
+    <tr ng-repeat="record in $data">
+      <td data-title="'Rank'"> {{record.rank}} </td>
+      <td data-title="'ID'"> {{record.id}} </td>
+      <td data-title="'Name'"> {{record.name}} </td>
+      <td data-title="'Rating'"> {{record.rating}} </td>
+      <td data-title="'Rating'"> {{record.rating}} </td>
+    </tr>
+  </table>
+
 </div>
