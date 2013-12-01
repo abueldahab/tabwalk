@@ -7,15 +7,60 @@
     return console.log(error);
   };
 
-  controller = function(scope, ngTableParams, $filter) {
-    var getData, initTable, load, onSuccess, query, userRating;
+  controller = function(params, scope, ngTableParams, $filter) {
+    var alter, fromRank, getData, initTable, load, onSuccess, query, refreshSeconds, toRank, userRating, venueUid, x;
+    venueUid = parseInt(params.venue, 10);
+    fromRank = parseFloat(params.from);
+    toRank = parseFloat(params.to);
+    refreshSeconds = parseInt(params.refresh, 10);
     userRating = Parse.Object.extend("UserRating");
     query = new Parse.Query(userRating);
+    query.equalTo('venueUid', venueUid);
     scope.entities = [];
+    scope.availableRatings = (function() {
+      var _i, _results;
+      _results = [];
+      for (x = _i = 1.0; 0.1 > 0 ? _i <= 5.0 : _i >= 5.0; x = _i += 0.1) {
+        _results.push(parseFloat(x.toFixed(1)));
+      }
+      return _results;
+    })();
+    console.log(scope.availableRatings);
+    alter = function(data) {
+      var results;
+      results = {};
+      _.each(data, function(e) {
+        var key, o;
+        key = e.get('objectType') + e.get('uid');
+        if (!results[key]) {
+          return results[key] = {
+            venueUid: e.get('venueUid'),
+            title: e.get('title'),
+            rating: e.get('rating'),
+            ratings: [e.get('rating')]
+          };
+        } else {
+          o = results[key];
+          o.ratings.push(e.get('rating'));
+          o.rating = _.reduce(o.ratings, function(a, b) {
+            return a + b;
+          }) / o.ratings.length;
+          return o.rating = parseFloat(o.rating.toFixed(1));
+        }
+      });
+      data = _.values(results);
+      data = _.sortBy(data, 'rating');
+      console.log(data);
+      data = _.filter(data, function(e) {
+        var _ref;
+        return (fromRank < (_ref = e.rating) && _ref < toRank);
+      });
+      return data;
+    };
     onSuccess = function(data) {
-      scope.entities = data;
-      scope.ratingsTable.reload();
-      return console.log(scope.entities);
+      scope.entities = alter(data);
+      console.log(scope.entities);
+      return scope.ratingsTable.reload();
     };
     getData = function() {
       return scope.entities || [];
@@ -59,7 +104,7 @@
     return initTable();
   };
 
-  angular.module("tapwalkdevApp").controller("MainCtrl", ['$scope', 'ngTableParams', '$filter', controller]);
+  angular.module("tapwalkdevApp").controller("MainCtrl", ['$routeParams', '$scope', 'ngTableParams', '$filter', controller]);
 
 }).call(this);
 

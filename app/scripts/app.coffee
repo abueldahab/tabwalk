@@ -1,14 +1,14 @@
 "use strict"
 config = ($routeProvider, $compileProvider) ->
 
-  Parse.initialize("xAONBeHiD8bBeKSdpRExCDCEbQWY8gENyPO0hP5q",
-                   "pwxKwWdssyPJf2bA7WvIFJ6mvQeGFCgtqGTbns0m")
+  Parse.initialize "xAONBeHiD8bBeKSdpRExCDCEbQWY8gENyPO0hP5q",
+                   "pwxKwWdssyPJf2bA7WvIFJ6mvQeGFCgtqGTbns0m"
 
-  $routeProvider.when("/",
+  $routeProvider.when "/:venue/:from/:to/:refresh",
     templateUrl: "views/main.html"
     controller: "MainCtrl"
 
-  ).otherwise redirectTo: "/"
+  #).otherwise redirectTo: "/"
 
 
 app = angular.module("tapwalkdevApp", ['ngRoute', 'ngTable'])
