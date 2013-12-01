@@ -37,7 +37,12 @@
           orderedData = (params.filter() ? $filter("filter")(data, params.filter()) : data);
           scope.list = orderedData != null ? orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()) : void 0;
           params.total(orderedData != null ? orderedData.length : void 0);
-          return $defer.resolve(scope.list);
+          $defer.resolve(scope.list);
+          return setTimeout(function() {
+            return scope.$apply(function() {
+              return $('.star').rating();
+            });
+          }, 100);
         },
         scope: {
           $data: {}

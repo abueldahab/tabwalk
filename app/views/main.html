@@ -1,13 +1,18 @@
 <div class="row">
 
   <table ng-table="ratingsTable" class="table table-bordered">
-    <tr ng-repeat="record in $data">
+    <tr ng-repeat="record in $data" ng-init="recordIndex = $index">
       <td data-title="'Rank'"> {{$index}} </td>
       <td data-title="'Venue UID'"> {{record.get('venueUid')}} </td>
       <td data-title="'Title'"> {{record.get('title')}} </td>
       <td data-title="'Rating'"> {{record.get('rating')}} </td>
-      <td data-title="''">
-        {{record.get('rating')}}
+      <td data-title="''" ng-init="rate = record.get('rating')">
+        <span ng-repeat="i in [1,2,3,4,5]">
+          <input id="rate{{recordIndex}}" name="rate{{recordIndex}}" type="radio" class="star"
+          ng-if="rate == i" checked="checked" disabled="disabled"/>
+          <input id="rate{{recordIndex}}" name="rate{{recordIndex}}" type="radio" class="star"
+          ng-if="rate != i" disabled="disabled"/>
+        </span>
       </td>
     </tr>
   </table>

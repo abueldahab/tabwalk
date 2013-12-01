@@ -14,6 +14,7 @@ controller = (scope, ngTableParams, $filter)->
     scope.ratingsTable.reload()
     console.log scope.entities
 
+
   getData = ->
     scope.entities or []
 
@@ -34,6 +35,12 @@ controller = (scope, ngTableParams, $filter)->
         # set total for recalc pagination
         params.total orderedData?.length
         $defer.resolve scope.list
+
+        setTimeout ->
+          scope.$apply ->
+            $('.star').rating()
+        , 100
+
       scope: {$data: {}}
     )
 
