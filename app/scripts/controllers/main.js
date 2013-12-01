@@ -13,14 +13,15 @@
     query = new Parse.Query(userRating);
     scope.entities = [];
     onSuccess = function(data) {
-      initTable();
-      return scope.entities = data;
+      scope.entities = data;
+      scope.ratingsTable.reload();
+      return console.log(scope.entities);
     };
     getData = function() {
       return scope.entities || [];
     };
     initTable = function() {
-      return scope.tableParams = new ngTableParams({
+      return scope.ratingsTable = new ngTableParams({
         page: 1,
         count: 10,
         sorting: {
@@ -44,16 +45,13 @@
       });
     };
     load = function() {
-      Service.list(function(data) {
-        scope.data = JSON.parse(data);
-        return initTable();
-      });
       return query.find({
         success: onSuccess,
         error: onError
       });
     };
-    return load();
+    load();
+    return initTable();
   };
 
   angular.module("tapwalkdevApp").controller("MainCtrl", ['$scope', 'ngTableParams', '$filter', controller]);

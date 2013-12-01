@@ -10,14 +10,15 @@ controller = (scope, ngTableParams, $filter)->
   scope.entities = []
 
   onSuccess = (data)->
-    initTable()
     scope.entities = data
+    scope.ratingsTable.reload()
+    console.log scope.entities
 
   getData = ->
     scope.entities or []
 
   initTable = ->
-    scope.tableParams = new ngTableParams(
+    scope.ratingsTable = new ngTableParams(
       page: 1 # show first page
       count: 10 # count per page
       sorting:
@@ -25,27 +26,25 @@ controller = (scope, ngTableParams, $filter)->
     ,
       total: ->
         getData().length # length of data
+
       getData: ($defer, params) ->
-        #$defer.resolve data.slice((params.page() - 1) * params.count(), params.page() * params.count())
         data = getData()
         orderedData = (if params.filter() then $filter("filter")(data, params.filter()) else data)
         scope.list = orderedData?.slice((params.page() - 1) * params.count(), params.page() * params.count())
-        params.total orderedData?.length # set total for recalc pagination
+        # set total for recalc pagination
+        params.total orderedData?.length
         $defer.resolve scope.list
       scope: {$data: {}}
     )
 
 
   load = ->
-    Service.list (data)->
-      scope.data = JSON.parse data
-      initTable()
-
     query.find
       success: onSuccess
       error: onError
 
   load()
+  initTable()
 
 
 angular.module("tapwalkdevApp")

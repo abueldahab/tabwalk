@@ -13,7 +13,7 @@
     });
   };
 
-  app = angular.module("tapwalkdevApp", ['ngRoute']);
+  app = angular.module("tapwalkdevApp", ['ngRoute', 'ngTable']);
 
   app.config(config);
 

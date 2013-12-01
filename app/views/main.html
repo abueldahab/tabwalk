@@ -1,16 +1,14 @@
-<h2 ng-if="entities && (entities.length == 0)"> No Data Available </h2>
-<div class="row" ng-if="entities && (entities.length > 0)">
-  <ul>
-    <li ng-repeat="e in entities">{{e}}</li>
-  </ul>
+<div class="row">
 
-  <table ng-table="installedPackagesTable" class="table table-bordered">
+  <table ng-table="ratingsTable" class="table table-bordered">
     <tr ng-repeat="record in $data">
-      <td data-title="'Rank'"> {{record.rank}} </td>
-      <td data-title="'ID'"> {{record.id}} </td>
-      <td data-title="'Name'"> {{record.name}} </td>
-      <td data-title="'Rating'"> {{record.rating}} </td>
-      <td data-title="'Rating'"> {{record.rating}} </td>
+      <td data-title="'Rank'"> {{$index}} </td>
+      <td data-title="'Venue UID'"> {{record.get('venueUid')}} </td>
+      <td data-title="'Title'"> {{record.get('title')}} </td>
+      <td data-title="'Rating'"> {{record.get('rating')}} </td>
+      <td data-title="''">
+        {{record.get('rating')}}
+      </td>
     </tr>
   </table>
 
