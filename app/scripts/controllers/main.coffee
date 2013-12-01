@@ -29,23 +29,28 @@ controller = (params, scope, ngTableParams, $filter)->
           title: e.get('title')
           rating: e.get('rating')
           ratings: [e.get('rating')]
+          userDevices: [e.get('userDeviceId')]
       else
         o = results[key]
         o.ratings.push e.get('rating')
+        o.userDevices.push e.get('userDeviceId')  unless e.get('userDeviceId') in o.userDevices
         o.rating = _.reduce(o.ratings, (a,b)-> a+b) / o.ratings.length
         o.rating = parseFloat o.rating.toFixed(1)
 
     data = _.values results
     data = _.sortBy data, 'rating'
-    console.log data
     data = _.filter data, (e)->
-      fromRank < e.rating < toRank
+      fromRank <= e.rating <= toRank
 
+    scope.rates = 0
+    scope.userDevices = 0
+    _.each data, (e)->
+      scope.rates += e.ratings.length
+      scope.userDevices += e.userDevices.length
     return data
 
   onSuccess = (data)->
     scope.entities = alter data
-    console.log scope.entities
     scope.ratingsTable.reload()
 
   getData = ->
