@@ -6,7 +6,7 @@
 
   <table ng-table="ratingsTable" class="table table-bordered">
     <tr ng-repeat="record in $data" ng-init="recordIndex = $index">
-      <td data-title="'Rank'"> {{$index}} </td>
+      <td data-title="'Rank'"> {{record.rank}} </td>
       <td data-title="'Venue UID'"> 
         <img width="100" height="100" src="http://tapwalk.com/leaderboard/POI_{{record.uid}}_LeaderBoardIcon.jpeg" />
       </td>

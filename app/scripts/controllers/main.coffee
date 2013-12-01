@@ -40,14 +40,28 @@ controller = (params, scope, ngTableParams, $filter, timeout)->
 
     data = _.values results
     data = _.sortBy(data, 'rating').reverse()
+    lastRating = -1
+    lastRank = 1
+    data = _.map data, (e, i)->
+      if e.rating is lastRating
+        e.rank = lastRank
+      else
+        e.rank = i + 1
+        lastRating = e.rating
+        lastRank = e.rank
+      e
+
     data = _.filter data, (e)->
-      fromRank <= e.rating <= toRank
+      console.log e.rank
+      fromRank <= e.rank <= toRank
 
     scope.rates = 0
-    scope.userDevices = 0
+    userDevicesElements = []
     _.each data, (e)->
       scope.rates += e.ratings.length
-      scope.userDevices += e.userDevices.length
+      userDevicesElements = userDevicesElements.concat(e.userDevices)
+
+    scope.userDevices = _.uniq(userDevicesElements).length
     return data
 
   onSuccess = (data)->

@@ -28,7 +28,7 @@
     })();
     console.log(scope.availableRatings);
     alter = function(data) {
-      var results;
+      var lastRank, lastRating, results, userDevicesElements;
       results = {};
       _.each(data, function(e) {
         var key, o, _ref;
@@ -56,16 +56,30 @@
       });
       data = _.values(results);
       data = _.sortBy(data, 'rating').reverse();
+      lastRating = -1;
+      lastRank = 1;
+      data = _.map(data, function(e, i) {
+        if (e.rating === lastRating) {
+          e.rank = lastRank;
+        } else {
+          e.rank = i + 1;
+          lastRating = e.rating;
+          lastRank = e.rank;
+        }
+        return e;
+      });
       data = _.filter(data, function(e) {
         var _ref;
-        return (fromRank <= (_ref = e.rating) && _ref <= toRank);
+        console.log(e.rank);
+        return (fromRank <= (_ref = e.rank) && _ref <= toRank);
       });
       scope.rates = 0;
-      scope.userDevices = 0;
+      userDevicesElements = [];
       _.each(data, function(e) {
         scope.rates += e.ratings.length;
-        return scope.userDevices += e.userDevices.length;
+        return userDevicesElements = userDevicesElements.concat(e.userDevices);
       });
+      scope.userDevices = _.uniq(userDevicesElements).length;
       return data;
     };
     onSuccess = function(data) {
